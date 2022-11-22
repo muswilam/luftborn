@@ -1,9 +1,11 @@
 ﻿using Core.Domain;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Core.Repositories
 {
-    public interface IUserRepository
+    public interface IUserRepository : IRepository<User>
     {
-        User GetUser(int id);
+        Task<IEnumerable<Gender>> GetGendersLookupAsync();
     }
 }

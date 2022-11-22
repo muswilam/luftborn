@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
 namespace Persistence.Migrations
 {
     [DbContext(typeof(LuftbornContext))]
-    partial class LuftbornContextModelSnapshot : ModelSnapshot
+    [Migration("20221122173349_AddGenderMigration")]
+    partial class AddGenderMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,23 +33,6 @@ namespace Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Genders");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "None"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Male"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Female"
-                        });
                 });
 
             modelBuilder.Entity("Core.Domain.User", b =>

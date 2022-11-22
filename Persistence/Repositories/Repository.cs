@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Persistence.Repositories
 {
@@ -17,14 +18,14 @@ namespace Persistence.Repositories
             _dbSet = _context.Set<T>();
         }
 
-        public T GetAsync(int id)
+        public async Task<T> GetAsync(int id)
         {
-            return _dbSet.Find(id);
+            return await _dbSet.FindAsync(id);
         }
 
-        public IEnumerable<T> GetAllAsync()
+        public async Task<IEnumerable<T>> GetAllAsync()
         {
-            return _dbSet.ToList();
+            return await _dbSet.ToListAsync();
         }
 
         public IEnumerable<T> Where(System.Linq.Expressions.Expression<Func<T, bool>> predicate)
@@ -32,19 +33,19 @@ namespace Persistence.Repositories
             return _dbSet.Where(predicate);
         }
 
-        public T SingleOrDefaultAsync(System.Linq.Expressions.Expression<Func<T, bool>> predicate)
+        public async Task<T> SingleOrDefaultAsync(System.Linq.Expressions.Expression<Func<T, bool>> predicate)
         {
-            return _dbSet.SingleOrDefault(predicate);
+            return await _dbSet.SingleOrDefaultAsync(predicate);
         }
 
-        public void AddAsync(T entity)
+        public async Task AddAsync(T entity)
         {
-            _dbSet.Add(entity);
+            await _dbSet.AddAsync(entity);
         }
 
-        public void AddRangeAsync(IEnumerable<T> entities)
+        public async Task AddRangeAsync(IEnumerable<T> entities)
         {
-            _dbSet.AddRange(entities);
+            _dbSet.AddRangeAsync(entities);
         }
 
         public void Remove(T entity)

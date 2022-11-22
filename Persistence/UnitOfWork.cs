@@ -12,6 +12,7 @@ namespace Persistence
                           IUserRepository userRepository)
         {
             _context = context;
+            Users = userRepository;
         }
 
         public IUserRepository Users { get; set; }

@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace Core.Repositories
 {
     public interface IRepository<T>
     {
-        // Read
-        T GetAsync(int id);
-        IEnumerable<T> GetAllAsync();
+        // Query.
+        Task<T> GetAsync(int id);
+        Task<IEnumerable<T>> GetAllAsync();
         IEnumerable<T> Where(Expression<Func<T, bool>> predicate);
-        T SingleOrDefaultAsync(Expression<Func<T, bool>> predicate);
+        Task<T> SingleOrDefaultAsync(Expression<Func<T, bool>> predicate);
 
-        // Insert
-        void AddAsync(T entity);
-        void AddRangeAsync(IEnumerable<T> entities);
+        // Command.
+        Task AddAsync(T entity);
+        Task AddRangeAsync(IEnumerable<T> entities);
 
-        // Delete
         void Remove(T entity);
         void RemoveRange(IEnumerable<T> entities);
     }
