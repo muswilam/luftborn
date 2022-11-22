@@ -1,6 +1,12 @@
-﻿namespace Core
+﻿using Core.Repositories;
+using System.Threading.Tasks;
+
+namespace Core
 {
-    public class IUnitOfWork
+    public interface IUnitOfWork
     {
+        IUserRepository Users { get; }
+
+        Task<bool> CommitAsync();
     }
 }
