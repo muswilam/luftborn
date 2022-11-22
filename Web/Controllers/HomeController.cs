@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
+using Web.Models;
 
 namespace Web.Controllers
 {
@@ -16,13 +17,26 @@ namespace Web.Controllers
             _unitOfWork = unitOfWork;
         }
 
+        [HttpGet("Index")]
         public async Task<IActionResult> Index()
         {
             var genders = await _unitOfWork.Users.GetGendersLookupAsync();
 
-            var user = await _unitOfWork.Users.GetAsync(1);
+            var users = await _unitOfWork.Users.GetAllAsync();
 
-            return View();
+            var userViewModel = new UserViewModel
+            {
+                Genders = genders,
+                Users = users
+            };
+
+            return View(userViewModel);
         }
+
+        //[HttpPost("Create")]
+        //public async Task<IActionResult> Create()
+        //{
+
+        //}
     }
 }

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 
 namespace Core.Domain
 {
@@ -11,8 +11,9 @@ namespace Core.Domain
         public int Id { get; set; }
         public string Name { get; set; }
         public int GenderId { get; set; }
+        public DateTime CreatedDate { get; set; }
 
-
+        // nav properties.
         public Gender Gender { get; set; }
     }
 }

@@ -1,8 +1,81 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model Web.Models.UserViewModel
+
+@{
+    ViewData["Title"] = "Luftborn";
 }
+
+<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <br />
+    <form>
+        <div class="form-row">
+            <div class="col-md-4">
+                <input type="text" id="username" class="form-control" placeholder="First name">
+            </div>
+            <div class="col-md-2">
+                <select id="gender" class="form-control">
+                    @foreach (var gender in Model.Genders)
+                    {
+                        <option value="@gender.Id">@gender.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="button" id="newBtn" class="btn btn-primary mb-2">New</button>
+            </div>
+        </div>
+    </form>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Gender</th>
+                <th scope="col">Join Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model.Users)
+            {
+                <tr>
+                    <th scope="row">@user.Id</th>
+                    <td>@user.Name</td>
+                    <td>@user.Gender</td>
+                    <td>@user.CreatedDate.ToString("dd MMM yyyy")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
+
+<script>
+    $('#newBtn').click(function () {
+        debugger;
+
+        let name = $('#username').val();
+        var genderId = $('#gender').find(":selected").val();
+
+        if (name != null) {
+
+            var newUser = {
+                name: name,
+                genderId: genderId
+            };
+
+            const newUserJson = JSON.stringify(newUser);
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("home/create")',
+                data: newUserJson,
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+            }).done(function () {
+                debugger;
+            })
+        }
+    })
+</script>
