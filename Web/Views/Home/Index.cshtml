@@ -58,8 +58,6 @@
 
 <script>
     $('#newBtn').click(function () {
-        debugger;
-
         let name = $('#username').val();
         let genderId = $('#gender').find(":selected").val();
 
@@ -76,8 +74,6 @@
             data: newUser,
 
         }).done(function (data) {
-            debugger;
-
             if (data.isSuccess) {
                 $("#body").append(`<tr>
                                         <th scope="row">${data.id}</th>
@@ -94,13 +90,10 @@
     })
 
     $("#body").on("click", ".removeBtn", function () {
-        debugger;
         let removeBtn = $(this);
 
-        let id = removeBtn.attr("user-id");
-
         let removeObj = {
-            id: id
+            id: removeBtn.attr("user-id")
         }
 
         $.ajax({
@@ -108,8 +101,6 @@
             url: '@Url.Action("Remove")',
             data: removeObj
         }).done(function (data) {
-            debugger;
-
             if (data.isSuccess) {
                 let row = removeBtn.closest("tr");
                 row.remove();
