@@ -45,7 +45,7 @@ namespace Persistence.Repositories
 
         public async Task AddRangeAsync(IEnumerable<T> entities)
         {
-            _dbSet.AddRangeAsync(entities);
+            await _dbSet.AddRangeAsync(entities);
         }
 
         public void Remove(T entity)
@@ -56,6 +56,11 @@ namespace Persistence.Repositories
         public void RemoveRange(IEnumerable<T> entities)
         {
             _dbSet.RemoveRange(entities);
+        }
+
+        public async Task ReloadAsync(T entity)
+        {
+            await _context.Entry(entity).ReloadAsync();
         }
     }
 }

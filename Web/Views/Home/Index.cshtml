@@ -4,15 +4,16 @@
     ViewData["Title"] = "Luftborn";
 }
 
-<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"
+    integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
+    <h1 class="display-4">Hey, It's Luftborn!</h1>
     <br />
     <form>
         <div class="form-row">
             <div class="col-md-4">
-                <input type="text" id="username" class="form-control" placeholder="First name">
+                <input type="text" id="username" required class="form-control" placeholder="Name">
             </div>
             <div class="col-md-2">
                 <select id="gender" class="form-control">
@@ -35,16 +36,20 @@
                 <th scope="col">Name</th>
                 <th scope="col">Gender</th>
                 <th scope="col">Join Date</th>
+                <th></th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="body">
             @foreach (var user in Model.Users)
             {
                 <tr>
+                    <span hidden>@user.Id</span>
                     <th scope="row">@user.Id</th>
                     <td>@user.Name</td>
-                    <td>@user.Gender</td>
+                    <td>@user.Gender.Name</td>
                     <td>@user.CreatedDate.ToString("dd MMM yyyy")</td>
+                    <td style="cursor: pointer;"><button class="removeBtn btn btn-danger sm-1" user-id="@user.Id"
+                        type="button">X</button></td>
                 </tr>
             }
         </tbody>
@@ -56,26 +61,59 @@
         debugger;
 
         let name = $('#username').val();
-        var genderId = $('#gender').find(":selected").val();
+        let genderId = $('#gender').find(":selected").val();
 
-        if (name != null) {
+        name = name != "" ? name : "Default";
 
-            var newUser = {
-                name: name,
-                genderId: genderId
-            };
+        let newUser = {
+            name: name,
+            genderId: genderId
+        };
 
-            const newUserJson = JSON.stringify(newUser);
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("Create")',
+            data: newUser,
 
-            $.ajax({
-                type: "POST",
-                url: '@Url.Action("home/create")',
-                data: newUserJson,
-                datatype: "json",
-                contentType: "application/json; charset=utf-8",
-            }).done(function () {
-                debugger;
-            })
+        }).done(function (data) {
+            debugger;
+
+            if (data.isSuccess) {
+                $("#body").append(`<tr>
+                                        <th scope="row">${data.id}</th>
+                                        <td>${name}</td>
+                                        <td>${$('#gender').find(":selected").text()}</td>
+                                        <td>${data.createdDate}</td>
+                                        <td style="cursor: pointer;"><button class="removeBtn btn btn-danger sm-1" user-id="${data.id}" type="button">X</button></td>
+                                       </tr>`)
+            }
+
+            $('#username').val('');
+            $('#gender').prop("selectedIndex", 0);
+        })
+    })
+
+    $("#body").on("click", ".removeBtn", function () {
+        debugger;
+        let removeBtn = $(this);
+
+        let id = removeBtn.attr("user-id");
+
+        let removeObj = {
+            id: id
         }
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("Remove")',
+            data: removeObj
+        }).done(function (data) {
+            debugger;
+
+            if (data.isSuccess) {
+                let row = removeBtn.closest("tr");
+                row.remove();
+            }
+        })
     })
 </script>

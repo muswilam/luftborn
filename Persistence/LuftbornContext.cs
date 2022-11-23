@@ -13,7 +13,6 @@ namespace Persistence
         public LuftbornContext(DbContextOptions options)
             : base(options)
         {
-
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

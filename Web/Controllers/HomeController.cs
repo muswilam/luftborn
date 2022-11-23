@@ -1,6 +1,8 @@
 ﻿using Core;
+using Core.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Threading.Tasks;
 using Web.Models;
 
@@ -17,7 +19,6 @@ namespace Web.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        [HttpGet("Index")]
         public async Task<IActionResult> Index()
         {
             var genders = await _unitOfWork.Users.GetGendersLookupAsync();
@@ -33,10 +34,50 @@ namespace Web.Controllers
             return View(userViewModel);
         }
 
-        //[HttpPost("Create")]
-        //public async Task<IActionResult> Create()
-        //{
+        [HttpPost("Create")]
+        public async Task<IActionResult> Create(NewUserModel newUser)
+        {
+            try
+            {
+                var user = new User
+                {
+                    Name = newUser.Name,
+                    GenderId = newUser.GenderId,
+                    CreatedDate = DateTime.UtcNow
+                };
 
-        //}
+                await _unitOfWork.Users.AddAsync(user);
+
+                await _unitOfWork.CommitAsync();
+
+                return Json(new { isSuccess = true, id = user.Id, createdDate = user.CreatedDate.ToString("dd MMM yyyy") });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { isSuccess = false, result = ex.Message.ToString() });
+            }
+        }
+
+        [HttpPost("Remove")]
+        public async Task<IActionResult> Remove(RemoveUserModel removeUser)
+        {
+            try
+            {
+                var user = await _unitOfWork.Users.GetAsync(removeUser.Id);
+
+                if(user is null)
+                    return Json(new { isSuccess = false, result = "User is not found!"});
+
+                _unitOfWork.Users.Remove(user);
+
+                await _unitOfWork.CommitAsync();
+
+                return Json(new { isSuccess = true});
+            }
+            catch (Exception ex)
+            {
+                return Json(new { isSuccess = false, result = ex.Message.ToString() });
+            }
+        }
     }
 }

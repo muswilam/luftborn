@@ -14,6 +14,6 @@ namespace Core.Domain
         public DateTime CreatedDate { get; set; }
 
         // nav properties.
-        public Gender Gender { get; set; }
+        public virtual Gender Gender { get; set; }
     }
 }
